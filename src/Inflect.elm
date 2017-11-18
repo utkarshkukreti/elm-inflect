@@ -3,25 +3,26 @@ module Inflect exposing (..)
 import Regex
 
 
-replace : String -> (Regex.Match -> String) -> String -> Maybe String
-replace regex_ replacer string =
-    let
-        regex =
-            Regex.regex regex_ |> Regex.caseInsensitive
-    in
+r : String -> Regex.Regex
+r =
+    Regex.regex >> Regex.caseInsensitive
+
+
+replace : Regex.Regex -> (Regex.Match -> String) -> String -> Maybe String
+replace regex replacer string =
     if Regex.contains regex string then
         Just <| Regex.replace Regex.All regex replacer string
     else
         Nothing
 
 
-replace0 : String -> String -> String -> Maybe String
+replace0 : Regex.Regex -> String -> String -> Maybe String
 replace0 regex replacement =
     replace regex
         (\match -> replacement)
 
 
-replace1 : String -> String -> String -> Maybe String
+replace1 : Regex.Regex -> String -> String -> Maybe String
 replace1 regex append =
     replace regex
         (\match ->
@@ -34,7 +35,7 @@ replace1 regex append =
         )
 
 
-replace2 : String -> String -> String -> Maybe String
+replace2 : Regex.Regex -> String -> String -> Maybe String
 replace2 regex append =
     replace regex
         (\match ->
@@ -67,8 +68,8 @@ irregulars isPlurals =
                                 else
                                     sTail
                         in
-                        [ replace1 ("(" ++ String.fromChar sHead ++ ")" ++ sTail) replacement
-                        , replace1 ("(" ++ String.fromChar pHead ++ ")" ++ pTail) replacement
+                        [ replace1 (r ("(" ++ String.fromChar sHead ++ ")" ++ sTail)) replacement
+                        , replace1 (r ("(" ++ String.fromChar pHead ++ ")" ++ pTail)) replacement
                         ]
 
                     _ ->
@@ -79,27 +80,27 @@ irregulars isPlurals =
 plurals : List (String -> Maybe String)
 plurals =
     List.reverse <|
-        [ replace0 "$" "s"
-        , replace0 "s$" "s"
-        , replace1 "^(ax|test)is$" "es"
-        , replace1 "(octop|vir)us$" "i"
-        , replace1 "(octop|vir)i$" "i"
-        , replace1 "(alias|status)$" "es"
-        , replace1 "(bu)s$" "ses"
-        , replace1 "(buffal|tomat)o$" "oes"
-        , replace1 "([ti])um$" "a"
-        , replace1 "([ti])a$" "a"
-        , replace0 "sis$" "ses"
-        , replace2 "(?:([^f])fe|([lr])f)$" "ves"
-        , replace1 "(hive)$" "s"
-        , replace1 "([^aeiouy]|qu)y$" "ies"
-        , replace1 "(x|ch|ss|sh)$" "es"
-        , replace1 "(matr|vert|ind)(?:ix|ex)$" "ices"
-        , replace1 "^(m|l)ouse$" "ice"
-        , replace1 "^(m|l)ice$" "ice"
-        , replace1 "^(ox)$" "en"
-        , replace1 "^(oxen)$" ""
-        , replace1 "(quiz)$" "zes"
+        [ replace0 (r "$") "s"
+        , replace0 (r "s$") "s"
+        , replace1 (r "^(ax|test)is$") "es"
+        , replace1 (r "(octop|vir)us$") "i"
+        , replace1 (r "(octop|vir)i$") "i"
+        , replace1 (r "(alias|status)$") "es"
+        , replace1 (r "(bu)s$") "ses"
+        , replace1 (r "(buffal|tomat)o$") "oes"
+        , replace1 (r "([ti])um$") "a"
+        , replace1 (r "([ti])a$") "a"
+        , replace0 (r "sis$") "ses"
+        , replace2 (r "(?:([^f])fe|([lr])f)$") "ves"
+        , replace1 (r "(hive)$") "s"
+        , replace1 (r "([^aeiouy]|qu)y$") "ies"
+        , replace1 (r "(x|ch|ss|sh)$") "es"
+        , replace1 (r "(matr|vert|ind)(?:ix|ex)$") "ices"
+        , replace1 (r "^(m|l)ouse$") "ice"
+        , replace1 (r "^(m|l)ice$") "ice"
+        , replace1 (r "^(ox)$") "en"
+        , replace1 (r "^(oxen)$") ""
+        , replace1 (r "(quiz)$") "zes"
         ]
             ++ irregulars True
 
@@ -107,33 +108,33 @@ plurals =
 singulars : List (String -> Maybe String)
 singulars =
     List.reverse <|
-        [ replace0 "s$" ""
-        , replace1 "(ss)$" ""
-        , replace1 "(n)ews$" "ews"
-        , replace1 "([ti])a$" "um"
-        , replace1 "((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)(sis|ses)$" "sis"
-        , replace1 "(^analy)(sis|ses)$" "sis"
-        , replace1 "([^f])ves$" "fe"
-        , replace1 "(hive)s$" ""
-        , replace1 "(tive)s$" ""
-        , replace1 "([lr])ves$" "f"
-        , replace1 "([^aeiouy]|qu)ies$" "y"
-        , replace1 "(s)eries$" "eries"
-        , replace1 "(m)ovies$" "ovie"
-        , replace1 "(x|ch|ss|sh)es$" ""
-        , replace1 "^(m|l)ice$" "ouse"
-        , replace1 "(bus)(es)?$" ""
-        , replace1 "(o)es$" ""
-        , replace1 "(shoe)s$" ""
-        , replace1 "(cris|test)(is|es)$" "is"
-        , replace1 "^(a)x[ie]s$" "xis"
-        , replace1 "(octop|vir)(us|i)$" "us"
-        , replace1 "(alias|status)(es)?$" ""
-        , replace1 "^(ox)en" ""
-        , replace1 "(vert|ind)ices$" "ex"
-        , replace1 "(matr)ices$" "ix"
-        , replace1 "(quiz)zes$" ""
-        , replace1 "(database)s$" ""
+        [ replace0 (r "s$") ""
+        , replace1 (r "(ss)$") ""
+        , replace1 (r "(n)ews$") "ews"
+        , replace1 (r "([ti])a$") "um"
+        , replace1 (r "((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)(sis|ses)$") "sis"
+        , replace1 (r "(^analy)(sis|ses)$") "sis"
+        , replace1 (r "([^f])ves$") "fe"
+        , replace1 (r "(hive)s$") ""
+        , replace1 (r "(tive)s$") ""
+        , replace1 (r "([lr])ves$") "f"
+        , replace1 (r "([^aeiouy]|qu)ies$") "y"
+        , replace1 (r "(s)eries$") "eries"
+        , replace1 (r "(m)ovies$") "ovie"
+        , replace1 (r "(x|ch|ss|sh)es$") ""
+        , replace1 (r "^(m|l)ice$") "ouse"
+        , replace1 (r "(bus)(es)?$") ""
+        , replace1 (r "(o)es$") ""
+        , replace1 (r "(shoe)s$") ""
+        , replace1 (r "(cris|test)(is|es)$") "is"
+        , replace1 (r "^(a)x[ie]s$") "xis"
+        , replace1 (r "(octop|vir)(us|i)$") "us"
+        , replace1 (r "(alias|status)(es)?$") ""
+        , replace1 (r "^(ox)en") ""
+        , replace1 (r "(vert|ind)ices$") "ex"
+        , replace1 (r "(matr)ices$") "ix"
+        , replace1 (r "(quiz)zes$") ""
+        , replace1 (r "(database)s$") ""
         ]
             ++ irregulars False
 
