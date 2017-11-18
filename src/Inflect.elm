@@ -21,60 +21,55 @@ replace0 regex replacement =
         (\match -> replacement)
 
 
-replace1 : String -> (String -> String) -> String -> Maybe String
-replace1 regex replacer =
+replace1 : String -> String -> String -> Maybe String
+replace1 regex append =
     replace regex
         (\match ->
             case match.submatches of
                 [ Just a ] ->
-                    replacer a
+                    a ++ append
 
                 _ ->
                     ""
         )
 
 
-replace2 : String -> (String -> String -> String) -> String -> Maybe String
-replace2 regex replacer =
+replace2 : String -> String -> String -> Maybe String
+replace2 regex append =
     replace regex
         (\match ->
             case match.submatches of
                 [ a, b ] ->
-                    replacer (Maybe.withDefault "" a) (Maybe.withDefault "" b)
+                    Maybe.withDefault "" a ++ Maybe.withDefault "" b ++ append
 
                 _ ->
                     ""
         )
-
-
-append : String -> String -> String
-append =
-    flip (++)
 
 
 plurals : List (String -> Maybe String)
 plurals =
     [ replace0 "$" "s"
     , replace0 "s$" "s"
-    , replace1 "^(ax|test)is$" (append "es")
-    , replace1 "(octop|vir)us$" (append "i")
-    , replace1 "(octop|vir)i$" (append "i")
-    , replace1 "(alias|status)$" (append "es")
-    , replace1 "(bu)s$" (append "ses")
-    , replace1 "(buffal|tomat)o$" (append "oes")
-    , replace1 "([ti])um$" (append "a")
-    , replace1 "([ti])a$" (append "a")
+    , replace1 "^(ax|test)is$" "es"
+    , replace1 "(octop|vir)us$" "i"
+    , replace1 "(octop|vir)i$" "i"
+    , replace1 "(alias|status)$" "es"
+    , replace1 "(bu)s$" "ses"
+    , replace1 "(buffal|tomat)o$" "oes"
+    , replace1 "([ti])um$" "a"
+    , replace1 "([ti])a$" "a"
     , replace0 "sis$" "ses"
-    , replace2 "(?:([^f])fe|([lr])f)$" (\x y -> x ++ y ++ "ves")
-    , replace1 "(hive)$" (append "s")
-    , replace1 "([^aeiouy]|qu)y$" (append "ies")
-    , replace1 "(x|ch|ss|sh)$" (append "es")
-    , replace1 "(matr|vert|ind)(?:ix|ex)$" (append "ices")
-    , replace1 "^(m|l)ouse$" (append "ice")
-    , replace1 "^(m|l)ice$" (append "ice")
-    , replace1 "^(ox)$" (append "en")
-    , replace1 "^(oxen)$" (append "")
-    , replace1 "(quiz)$" (append "zes")
+    , replace2 "(?:([^f])fe|([lr])f)$" "ves"
+    , replace1 "(hive)$" "s"
+    , replace1 "([^aeiouy]|qu)y$" "ies"
+    , replace1 "(x|ch|ss|sh)$" "es"
+    , replace1 "(matr|vert|ind)(?:ix|ex)$" "ices"
+    , replace1 "^(m|l)ouse$" "ice"
+    , replace1 "^(m|l)ice$" "ice"
+    , replace1 "^(ox)$" "en"
+    , replace1 "^(oxen)$" ""
+    , replace1 "(quiz)$" "zes"
     ]
         |> List.reverse
 
