@@ -1,5 +1,6 @@
-module Inflect exposing (pluralize, singularize)
+module Inflect exposing (camelize, pascalize, pluralize, singularize)
 
+import Char
 import Regex exposing (Regex)
 
 
@@ -176,3 +177,26 @@ singularize string =
         string
     else
         apply singulars string
+
+
+mapFirst : (Char -> Char) -> String -> String
+mapFirst f string =
+    case String.uncons string of
+        Just ( head, tail ) ->
+            String.fromChar (f head) ++ tail
+
+        Nothing ->
+            string
+
+
+camelize : String -> String
+camelize =
+    pascalize >> mapFirst Char.toLower
+
+
+pascalize : String -> String
+pascalize string =
+    string
+        |> Regex.find Regex.All (Regex.regex "[a-zA-Z]+|[0-9]+")
+        |> List.map (.match >> String.toLower >> mapFirst Char.toUpper)
+        |> String.join ""

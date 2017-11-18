@@ -76,4 +76,26 @@ suite =
                            )
                 )
                 singularsToPlurals
+        , describe "camelize and pascalize" <|
+            let
+                cases =
+                    [ ( "foo bar", "fooBar", "FooBar" )
+                    , ( "foo-bar", "fooBar", "FooBar" )
+                    , ( "foo-_bar", "fooBar", "FooBar" )
+                    , ( "foo -\tbar", "fooBar", "FooBar" )
+                    , ( "foo 123 bar", "foo123Bar", "Foo123Bar" )
+                    , ( "foo 123 bar456baz", "foo123Bar456Baz", "Foo123Bar456Baz" )
+                    ]
+                        |> List.concatMap
+                            (\( string, camel, pascal ) ->
+                                [ ( string, camel, pascal ), ( String.toUpper string, camel, pascal ) ]
+                            )
+            in
+            List.concatMap
+                (\( string, camel, pascal ) ->
+                    [ test ("camelize(" ++ string ++ ") -> " ++ camel) <| \_ -> Inflect.camelize string |> Expect.equal camel
+                    , test ("pascalize(" ++ string ++ ") -> " ++ pascal) <| \_ -> Inflect.pascalize string |> Expect.equal pascal
+                    ]
+                )
+                cases
         ]
