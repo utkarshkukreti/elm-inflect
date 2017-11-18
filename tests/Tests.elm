@@ -52,15 +52,25 @@ suite : Test
 suite =
     describe "Inflect"
         [ describe "pluralize" <|
-            List.map
+            List.concatMap
                 (\( singular, plural ) ->
-                    test (singular ++ " -> " ++ plural) <| \_ -> Inflect.pluralize singular |> Expect.equal plural
+                    [ test (singular ++ " -> " ++ plural) <| \_ -> Inflect.pluralize singular |> Expect.equal plural ]
+                        ++ (if singular == plural then
+                                []
+                            else
+                                [ test (plural ++ " -> " ++ plural) <| \_ -> Inflect.pluralize plural |> Expect.equal plural ]
+                           )
                 )
                 singularsToPlurals
         , describe "singularize" <|
-            List.map
+            List.concatMap
                 (\( singular, plural ) ->
-                    test (plural ++ " -> " ++ singular) <| \_ -> Inflect.singularize plural |> Expect.equal singular
+                    [ test (plural ++ " -> " ++ singular) <| \_ -> Inflect.singularize plural |> Expect.equal singular ]
+                        ++ (if singular == plural then
+                                []
+                            else
+                                [ test (singular ++ " -> " ++ singular) <| \_ -> Inflect.singularize singular |> Expect.equal singular ]
+                           )
                 )
                 singularsToPlurals
         ]
