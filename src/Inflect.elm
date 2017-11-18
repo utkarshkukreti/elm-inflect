@@ -8,21 +8,17 @@ r =
     Regex.regex >> Regex.caseInsensitive
 
 
-replace : Regex.Regex -> (Regex.Match -> String) -> String -> Maybe String
-replace regex replacer string =
-    if Regex.contains regex string then
-        Just <| Regex.replace Regex.All regex replacer string
-    else
-        Nothing
+replace : Regex.Regex -> (Regex.Match -> String) -> ( Regex.Regex, String -> String )
+replace regex replacer =
+    ( regex, \string -> Regex.replace Regex.All regex replacer string )
 
 
-replace0 : Regex.Regex -> String -> String -> Maybe String
+replace0 : Regex.Regex -> String -> ( Regex.Regex, String -> String )
 replace0 regex replacement =
-    replace regex
-        (\match -> replacement)
+    replace regex (\match -> replacement)
 
 
-replace1 : Regex.Regex -> String -> String -> Maybe String
+replace1 : Regex.Regex -> String -> ( Regex.Regex, String -> String )
 replace1 regex append =
     replace regex
         (\match ->
@@ -35,7 +31,7 @@ replace1 regex append =
         )
 
 
-replace2 : Regex.Regex -> String -> String -> Maybe String
+replace2 : Regex.Regex -> String -> ( Regex.Regex, String -> String )
 replace2 regex append =
     replace regex
         (\match ->
@@ -48,7 +44,7 @@ replace2 regex append =
         )
 
 
-irregulars : Bool -> List (String -> Maybe String)
+irregulars : Bool -> List ( Regex.Regex, String -> String )
 irregulars isPlurals =
     [ ( "person", "people" )
     , ( "man", "men" )
@@ -77,7 +73,7 @@ irregulars isPlurals =
             )
 
 
-plurals : List (String -> Maybe String)
+plurals : List ( Regex.Regex, String -> String )
 plurals =
     List.reverse <|
         [ replace0 (r "$") "s"
@@ -105,7 +101,7 @@ plurals =
             ++ irregulars True
 
 
-singulars : List (String -> Maybe String)
+singulars : List ( Regex.Regex, String -> String )
 singulars =
     List.reverse <|
         [ replace0 (r "s$") ""
@@ -154,16 +150,14 @@ uncountables =
     ]
 
 
-apply : List (String -> Maybe String) -> String -> String
+apply : List ( Regex.Regex, String -> String ) -> String -> String
 apply replacers string =
     case replacers of
-        head :: tail ->
-            case head string of
-                Just string ->
-                    string
-
-                Nothing ->
-                    apply tail string
+        ( regex, replacer ) :: tail ->
+            if Regex.contains regex string then
+                replacer string
+            else
+                apply tail string
 
         [] ->
             string
