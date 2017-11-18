@@ -33,8 +33,29 @@ suite =
                         test (a ++ " -> " ++ b) <| \_ -> Inflect.pluralize a |> Expect.equal b
                     )
             )
-        , skip <|
-            describe "singularize"
-                [ test "foos" <| \_ -> Inflect.singularize "foos" |> Expect.equal "foo"
-                ]
+        , describe "singularize"
+            (let
+                cases =
+                    [ ( "foos", "foo" )
+                    , ( "foss", "foss" )
+                    , ( "news", "news" )
+                    , ( "media", "medium" )
+                    , ( "diagnoses", "diagnosis" )
+                    , ( "hives", "hive" )
+                    , ( "series", "series" )
+                    , ( "buses", "bus" )
+                    , ( "octopi", "octopus" )
+                    , ( "vertices", "vertex" )
+                    , ( "databases", "database" )
+                    , ( "equipment", "equipment" )
+                    , ( "fish", "fish" )
+                    , ( "police", "police" )
+                    ]
+             in
+             cases
+                |> List.map
+                    (\( a, b ) ->
+                        test (a ++ " -> " ++ b) <| \_ -> Inflect.singularize a |> Expect.equal b
+                    )
+            )
         ]

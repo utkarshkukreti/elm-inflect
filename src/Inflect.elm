@@ -26,7 +26,7 @@ replace1 regex append =
     replace regex
         (\match ->
             case match.submatches of
-                [ Just a ] ->
+                (Just a) :: _ ->
                     a ++ append
 
                 _ ->
@@ -74,6 +74,39 @@ plurals =
         |> List.reverse
 
 
+singulars : List (String -> Maybe String)
+singulars =
+    [ replace0 "s$" ""
+    , replace1 "(ss)$" ""
+    , replace1 "(n)ews$" "ews"
+    , replace1 "([ti])a$" "um"
+    , replace1 "((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)(sis|ses)$" "sis"
+    , replace1 "(^analy)(sis|ses)$" "sis"
+    , replace1 "([^f])ves$" "fe"
+    , replace1 "(hive)s$" ""
+    , replace1 "(tive)s$" ""
+    , replace1 "([lr])ves$" "f"
+    , replace1 "([^aeiouy]|qu)ies$" "y"
+    , replace1 "(s)eries$" "eries"
+    , replace1 "(m)ovies$" "ovie"
+    , replace1 "(x|ch|ss|sh)es$" ""
+    , replace1 "^(m|l)ice$" "ouse"
+    , replace1 "(bus)(es)?$" ""
+    , replace1 "(o)es$" ""
+    , replace1 "(shoe)s$" ""
+    , replace1 "(cris|test)(is|es)$" "is"
+    , replace1 "^(a)x[ie]s$" "xis"
+    , replace1 "(octop|vir)(us|i)$" "us"
+    , replace1 "(alias|status)(es)?$" ""
+    , replace1 "^(ox)en" ""
+    , replace1 "(vert|ind)ices$" "ex"
+    , replace1 "(matr)ices$" "ix"
+    , replace1 "(quiz)zes$" ""
+    , replace1 "(database)s$" ""
+    ]
+        |> List.reverse
+
+
 uncountables : List String
 uncountables =
     [ "equipment"
@@ -89,29 +122,32 @@ uncountables =
     ]
 
 
-pluralize : String -> String
-pluralize string =
-    if List.member string uncountables then
-        string
-    else
-        pluralize_ plurals string
-
-
-pluralize_ : List (String -> Maybe String) -> String -> String
-pluralize_ plurals string =
-    case plurals of
+apply : List (String -> Maybe String) -> String -> String
+apply replacers string =
+    case replacers of
         head :: tail ->
             case head string of
                 Just string ->
                     string
 
                 Nothing ->
-                    pluralize_ tail string
+                    apply tail string
 
         [] ->
             string
 
 
+pluralize : String -> String
+pluralize string =
+    if List.member string uncountables then
+        string
+    else
+        apply plurals string
+
+
 singularize : String -> String
-singularize =
-    identity
+singularize string =
+    if List.member string uncountables then
+        string
+    else
+        apply singulars string
