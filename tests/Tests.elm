@@ -22,6 +22,9 @@ suite =
                     , ( "wife", "wives" )
                     , ( "safe", "saves" )
                     , ( "half", "halves" )
+                    , ( "equipment", "equipment" )
+                    , ( "fish", "fish" )
+                    , ( "police", "police" )
                     ]
              in
              cases

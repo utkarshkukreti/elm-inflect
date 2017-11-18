@@ -79,9 +79,27 @@ plurals =
         |> List.reverse
 
 
+uncountables : List String
+uncountables =
+    [ "equipment"
+    , "information"
+    , "rice"
+    , "money"
+    , "species"
+    , "series"
+    , "fish"
+    , "sheep"
+    , "jeans"
+    , "police"
+    ]
+
+
 pluralize : String -> String
-pluralize =
-    pluralize_ plurals
+pluralize string =
+    if List.member string uncountables then
+        string
+    else
+        pluralize_ plurals string
 
 
 pluralize_ : List (String -> Maybe String) -> String -> String
