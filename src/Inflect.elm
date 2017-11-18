@@ -9,7 +9,7 @@ replace regex_ replacer =
         regex =
             regex_ |> Regex.regex |> Regex.caseInsensitive
     in
-    ( regex, \string -> Regex.replace Regex.All regex replacer string )
+    ( regex, Regex.replace Regex.All regex replacer )
 
 
 replace0 : String -> String -> ( Regex, String -> String )
