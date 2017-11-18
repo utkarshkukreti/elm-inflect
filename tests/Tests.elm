@@ -13,6 +13,12 @@ suite =
                 cases =
                     [ ( "foo", "foos" )
                     , ( "foos", "foos" )
+                    , ( "axis", "axes" )
+                    , ( "bus", "buses" )
+                    , ( "matrix", "matrices" )
+                    , ( "ox", "oxen" )
+                    , ( "oxen", "oxen" )
+                    , ( "quiz", "quizzes" )
                     ]
              in
              cases

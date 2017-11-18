@@ -22,8 +22,16 @@ replace0 regex replacement =
 
 
 replace1 : String -> (String -> String) -> String -> Maybe String
-replace1 regex replacer string =
-    Nothing
+replace1 regex replacer =
+    replace regex
+        (\match ->
+            case match.submatches of
+                [ Just a ] ->
+                    replacer a
+
+                _ ->
+                    ""
+        )
 
 
 replace2 : String -> (String -> String -> String) -> String -> Maybe String
