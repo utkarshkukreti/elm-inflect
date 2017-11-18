@@ -9,9 +9,20 @@ suite : Test
 suite =
     describe "Inflect"
         [ describe "pluralize"
-            [ test "foo" <| \_ -> Inflect.pluralize "foo" |> Expect.equal "foos"
-            ]
-        , describe "singularize"
-            [ test "foos" <| \_ -> Inflect.singularize "foos" |> Expect.equal "foo"
-            ]
+            (let
+                cases =
+                    [ ( "foo", "foos" )
+                    , ( "foos", "foos" )
+                    ]
+             in
+             cases
+                |> List.map
+                    (\( a, b ) ->
+                        test (a ++ " -> " ++ b) <| \_ -> Inflect.pluralize a |> Expect.equal b
+                    )
+            )
+        , skip <|
+            describe "singularize"
+                [ test "foos" <| \_ -> Inflect.singularize "foos" |> Expect.equal "foo"
+                ]
         ]
