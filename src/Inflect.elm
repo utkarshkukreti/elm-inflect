@@ -35,8 +35,16 @@ replace1 regex replacer =
 
 
 replace2 : String -> (String -> String -> String) -> String -> Maybe String
-replace2 regex replacer string =
-    Nothing
+replace2 regex replacer =
+    replace regex
+        (\match ->
+            case match.submatches of
+                [ a, b ] ->
+                    replacer (Maybe.withDefault "" a) (Maybe.withDefault "" b)
+
+                _ ->
+                    ""
+        )
 
 
 append : String -> String -> String

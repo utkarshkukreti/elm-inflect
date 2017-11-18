@@ -19,6 +19,9 @@ suite =
                     , ( "ox", "oxen" )
                     , ( "oxen", "oxen" )
                     , ( "quiz", "quizzes" )
+                    , ( "wife", "wives" )
+                    , ( "safe", "saves" )
+                    , ( "half", "halves" )
                     ]
              in
              cases
