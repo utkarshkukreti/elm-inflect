@@ -15,7 +15,7 @@ replace regex_ replacer =
 
 replace0 : String -> String -> ( Regex, String -> String )
 replace0 regex replacement =
-    replace regex (\match -> replacement)
+    replace regex (always replacement)
 
 
 replace1 : String -> String -> ( Regex, String -> String )
