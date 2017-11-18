@@ -29,6 +29,9 @@ singularsToPlurals =
     , ( "equipment", "equipment" )
     , ( "fish", "fish" )
     , ( "police", "police" )
+    , ( "person", "people" )
+    , ( "child", "children" )
+    , ( "zombie", "zombies" )
     ]
         |> List.concatMap
             (\( singular, plural ) ->
