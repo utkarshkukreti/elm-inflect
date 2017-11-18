@@ -5,57 +5,45 @@ import Inflect
 import Test exposing (..)
 
 
+singularsToPlurals : List ( String, String )
+singularsToPlurals =
+    [ ( "foo", "foos" )
+    , ( "axis", "axes" )
+    , ( "bus", "buses" )
+    , ( "matrix", "matrices" )
+    , ( "ox", "oxen" )
+    , ( "quiz", "quizzes" )
+    , ( "wife", "wives" )
+    , ( "safe", "saves" )
+    , ( "half", "halves" )
+    , ( "foss", "fosses" )
+    , ( "news", "news" )
+    , ( "medium", "media" )
+    , ( "diagnosis", "diagnoses" )
+    , ( "hive", "hives" )
+    , ( "series", "series" )
+    , ( "octopus", "octopi" )
+    , ( "vertex", "vertices" )
+    , ( "database", "databases" )
+    , ( "equipment", "equipment" )
+    , ( "fish", "fish" )
+    , ( "police", "police" )
+    ]
+
+
 suite : Test
 suite =
     describe "Inflect"
-        [ describe "pluralize"
-            (let
-                cases =
-                    [ ( "foo", "foos" )
-                    , ( "foos", "foos" )
-                    , ( "axis", "axes" )
-                    , ( "bus", "buses" )
-                    , ( "matrix", "matrices" )
-                    , ( "ox", "oxen" )
-                    , ( "oxen", "oxen" )
-                    , ( "quiz", "quizzes" )
-                    , ( "wife", "wives" )
-                    , ( "safe", "saves" )
-                    , ( "half", "halves" )
-                    , ( "equipment", "equipment" )
-                    , ( "fish", "fish" )
-                    , ( "police", "police" )
-                    ]
-             in
-             cases
-                |> List.map
-                    (\( a, b ) ->
-                        test (a ++ " -> " ++ b) <| \_ -> Inflect.pluralize a |> Expect.equal b
-                    )
-            )
-        , describe "singularize"
-            (let
-                cases =
-                    [ ( "foos", "foo" )
-                    , ( "foss", "foss" )
-                    , ( "news", "news" )
-                    , ( "media", "medium" )
-                    , ( "diagnoses", "diagnosis" )
-                    , ( "hives", "hive" )
-                    , ( "series", "series" )
-                    , ( "buses", "bus" )
-                    , ( "octopi", "octopus" )
-                    , ( "vertices", "vertex" )
-                    , ( "databases", "database" )
-                    , ( "equipment", "equipment" )
-                    , ( "fish", "fish" )
-                    , ( "police", "police" )
-                    ]
-             in
-             cases
-                |> List.map
-                    (\( a, b ) ->
-                        test (a ++ " -> " ++ b) <| \_ -> Inflect.singularize a |> Expect.equal b
-                    )
-            )
+        [ describe "pluralize" <|
+            List.map
+                (\( singular, plural ) ->
+                    test (singular ++ " -> " ++ plural) <| \_ -> Inflect.pluralize singular |> Expect.equal plural
+                )
+                singularsToPlurals
+        , describe "singularize" <|
+            List.map
+                (\( singular, plural ) ->
+                    test (plural ++ " -> " ++ singular) <| \_ -> Inflect.singularize plural |> Expect.equal singular
+                )
+                singularsToPlurals
         ]
