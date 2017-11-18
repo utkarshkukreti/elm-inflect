@@ -195,8 +195,7 @@ camelize =
 
 
 pascalize : String -> String
-pascalize string =
-    string
-        |> Regex.find Regex.All (Regex.regex "[a-zA-Z]+|[0-9]+")
-        |> List.map (.match >> String.toLower >> mapFirst Char.toUpper)
-        |> String.join ""
+pascalize =
+    Regex.find Regex.All (Regex.regex "[a-zA-Z]+|[0-9]+")
+        >> List.map (.match >> String.toLower >> mapFirst Char.toUpper)
+        >> String.join ""
