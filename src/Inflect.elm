@@ -1,4 +1,4 @@
-module Inflect exposing (..)
+module Inflect exposing (pluralize, singularize)
 
 import Regex
 
