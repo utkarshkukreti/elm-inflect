@@ -1,5 +1,6 @@
 module Tests exposing (..)
 
+import Char
 import Expect exposing (Expectation)
 import Inflect
 import Test exposing (..)
@@ -29,6 +30,22 @@ singularsToPlurals =
     , ( "fish", "fish" )
     , ( "police", "police" )
     ]
+        |> List.concatMap
+            (\( singular, plural ) ->
+                [ ( singular, plural )
+                , ( capitalizeFirst singular, capitalizeFirst plural )
+                ]
+            )
+
+
+capitalizeFirst : String -> String
+capitalizeFirst string =
+    case String.uncons string of
+        Just ( head, tail ) ->
+            String.cons (Char.toUpper head) tail
+
+        Nothing ->
+            string
 
 
 suite : Test

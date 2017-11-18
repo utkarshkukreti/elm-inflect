@@ -139,7 +139,7 @@ apply replacers string =
 
 pluralize : String -> String
 pluralize string =
-    if List.member string uncountables then
+    if List.member (String.toLower string) uncountables then
         string
     else
         apply plurals string
@@ -147,7 +147,7 @@ pluralize string =
 
 singularize : String -> String
 singularize string =
-    if List.member string uncountables then
+    if List.member (String.toLower string) uncountables then
         string
     else
         apply singulars string
