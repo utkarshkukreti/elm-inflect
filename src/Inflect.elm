@@ -4,7 +4,11 @@ import Char
 import Regex exposing (Regex)
 
 
-replace : String -> (Regex.Match -> String) -> ( Regex, String -> String )
+type alias Replacer =
+    ( Regex, String -> String )
+
+
+replace : String -> (Regex.Match -> String) -> Replacer
 replace regex_ replacer =
     let
         regex =
@@ -13,12 +17,12 @@ replace regex_ replacer =
     ( regex, Regex.replace Regex.All regex replacer )
 
 
-replace0 : String -> String -> ( Regex, String -> String )
+replace0 : String -> String -> Replacer
 replace0 regex replacement =
     replace regex (always replacement)
 
 
-replace1 : String -> String -> ( Regex, String -> String )
+replace1 : String -> String -> Replacer
 replace1 regex append =
     replace regex
         (\match ->
@@ -31,7 +35,7 @@ replace1 regex append =
         )
 
 
-replace2 : String -> String -> ( Regex, String -> String )
+replace2 : String -> String -> Replacer
 replace2 regex append =
     replace regex
         (\match ->
@@ -44,7 +48,7 @@ replace2 regex append =
         )
 
 
-irregulars : Bool -> List ( Regex, String -> String )
+irregulars : Bool -> List Replacer
 irregulars isPlurals =
     [ ( "person", "people" )
     , ( "man", "men" )
@@ -73,7 +77,7 @@ irregulars isPlurals =
             )
 
 
-plurals : List ( Regex, String -> String )
+plurals : List Replacer
 plurals =
     List.reverse <|
         [ replace0 "$" "s"
@@ -101,7 +105,7 @@ plurals =
             ++ irregulars True
 
 
-singulars : List ( Regex, String -> String )
+singulars : List Replacer
 singulars =
     List.reverse <|
         [ replace0 "s$" ""
@@ -150,7 +154,7 @@ uncountables =
     ]
 
 
-apply : List ( Regex, String -> String ) -> String -> String
+apply : List Replacer -> String -> String
 apply replacers string =
     case replacers of
         ( regex, replacer ) :: tail ->
