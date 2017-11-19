@@ -57,22 +57,30 @@ suite =
         [ describe "pluralize" <|
             List.concatMap
                 (\( singular, plural ) ->
-                    [ test (singular ++ " -> " ++ plural) <| \_ -> Inflect.pluralize singular |> Expect.equal plural ]
+                    [ test (singular ++ " -> " ++ plural) <|
+                        \_ -> Inflect.pluralize singular |> Expect.equal plural
+                    ]
                         ++ (if singular == plural then
                                 []
                             else
-                                [ test (plural ++ " -> " ++ plural) <| \_ -> Inflect.pluralize plural |> Expect.equal plural ]
+                                [ test (plural ++ " -> " ++ plural) <|
+                                    \_ -> Inflect.pluralize plural |> Expect.equal plural
+                                ]
                            )
                 )
                 singularsToPlurals
         , describe "singularize" <|
             List.concatMap
                 (\( singular, plural ) ->
-                    [ test (plural ++ " -> " ++ singular) <| \_ -> Inflect.singularize plural |> Expect.equal singular ]
+                    [ test (plural ++ " -> " ++ singular) <|
+                        \_ -> Inflect.singularize plural |> Expect.equal singular
+                    ]
                         ++ (if singular == plural then
                                 []
                             else
-                                [ test (singular ++ " -> " ++ singular) <| \_ -> Inflect.singularize singular |> Expect.equal singular ]
+                                [ test (singular ++ " -> " ++ singular) <|
+                                    \_ -> Inflect.singularize singular |> Expect.equal singular
+                                ]
                            )
                 )
                 singularsToPlurals
@@ -88,13 +96,17 @@ suite =
                     ]
                         |> List.concatMap
                             (\( string, camel, pascal ) ->
-                                [ ( string, camel, pascal ), ( String.toUpper string, camel, pascal ) ]
+                                [ ( string, camel, pascal )
+                                , ( String.toUpper string, camel, pascal )
+                                ]
                             )
             in
             List.concatMap
                 (\( string, camel, pascal ) ->
-                    [ test ("camelize(" ++ string ++ ") -> " ++ camel) <| \_ -> Inflect.camelize string |> Expect.equal camel
-                    , test ("pascalize(" ++ string ++ ") -> " ++ pascal) <| \_ -> Inflect.pascalize string |> Expect.equal pascal
+                    [ test ("camelize(" ++ string ++ ") -> " ++ camel) <|
+                        \_ -> Inflect.camelize string |> Expect.equal camel
+                    , test ("pascalize(" ++ string ++ ") -> " ++ pascal) <|
+                        \_ -> Inflect.pascalize string |> Expect.equal pascal
                     ]
                 )
                 cases
