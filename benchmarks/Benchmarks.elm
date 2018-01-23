@@ -9,14 +9,14 @@ suite : Benchmark
 suite =
     describe "Inflect"
         [ describe "pluralize"
-            [ benchmark1 "pluralize person" Inflect.pluralize "person"
-            , benchmark1 "pluralize ox" Inflect.pluralize "ox"
-            , benchmark1 "pluralize foo" Inflect.pluralize "foo"
+            [ benchmark "pluralize person" <| \_ -> Inflect.pluralize "person"
+            , benchmark "pluralize ox" <| \_ -> Inflect.pluralize "ox"
+            , benchmark "pluralize foo" <| \_ -> Inflect.pluralize "foo"
             ]
         , describe "singularize"
-            [ benchmark1 "singularize people" Inflect.singularize "people"
-            , benchmark1 "singularize oxen" Inflect.singularize "oxen"
-            , benchmark1 "singularize foos" Inflect.singularize "foos"
+            [ benchmark "singularize people" <| \_ -> Inflect.singularize "people"
+            , benchmark "singularize oxen" <| \_ -> Inflect.singularize "oxen"
+            , benchmark "singularize foos" <| \_ -> Inflect.singularize "foos"
             ]
         ]
 
