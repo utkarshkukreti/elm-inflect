@@ -167,6 +167,13 @@ apply replacers string =
             string
 
 
+{-| Convert a String to its plural form.
+
+    pluralize "foo" == "foos"
+    pluralize "axis" == "axes"
+    pluralize "bus" == "buses"
+
+-}
 pluralize : String -> String
 pluralize string =
     if List.member (String.toLower string) uncountables then
@@ -175,6 +182,13 @@ pluralize string =
         apply plurals string
 
 
+{-| Convert a String to its singular form.
+
+    singularize "foos" == "foo"
+    singularize "axes" == "axis"
+    singularize "buses" == "bus"
+
+-}
 singularize : String -> String
 singularize string =
     if List.member (String.toLower string) uncountables then
@@ -193,11 +207,25 @@ mapFirst f string =
             string
 
 
+{-| Convert a String to camelCase.
+
+    camelize "foo bar" == "fooBar"
+    camelize "foo-bar" == "fooBar"
+    camelize "foo-_bar" == "fooBar"
+
+-}
 camelize : String -> String
 camelize =
     pascalize >> mapFirst Char.toLower
 
 
+{-| Convert a String to PascalCase
+
+    pascalize "foo bar" == "FooBar"
+    pascalize "foo-bar" == "FooBar"
+    pascalize "foo-_bar" == "FooBar"
+
+-}
 pascalize : String -> String
 pascalize =
     Regex.find Regex.All (Regex.regex "[a-zA-Z]+|[0-9]+")
