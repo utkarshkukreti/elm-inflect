@@ -4,7 +4,7 @@
   "repository": "https://github.com/utkarshkukreti/elm-inflect.git",
   "license": "MIT",
   "source-directories": ["src"],
-  "exposed-modules": [],
+  "exposed-modules": ["Inflect"],
   "dependencies": {
     "elm-lang/core": "5.1.1 <= v < 6.0.0"
   },
