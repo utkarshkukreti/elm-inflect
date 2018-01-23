@@ -1,5 +1,12 @@
 module Inflect exposing (camelize, pascalize, pluralize, singularize)
 
+{-| `elm-inflect` lets you convert a String to its plural, singular, camelCase,
+and PascalCase forms.
+
+@docs pluralize, singularize, camelize, pascalize
+
+-}
+
 import Char
 import Regex exposing (Regex)
 
